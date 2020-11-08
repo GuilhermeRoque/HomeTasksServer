@@ -42,12 +42,10 @@ public class UserDAO {
 		String sql;
 		if (user.getIdHome() >0){
 			sql = "update User set date = ?, gender = ?, points = ?, profile = ?, name = ?," +
-					"telephone = ?, password = ?, email = ?, picture = ?, " +
-					"token = ?, idHome = ? where idUser = ?";
+					"telephone = ?, password = ?, email = ?, picture = ?, idHome = ? where idUser = ?";
 		}else {
 			sql = "update User set date = ?, gender = ?, points = ?, profile = ?, name = ?," +
-					"telephone = ?, password = ?, email = ?, picture = ?, " +
-					"token = ? where idUser = ?";
+					"telephone = ?, password = ?, email = ?, picture = ? where idUser = ?";
 		}
 		int rows = 0;
 		try (Connection conn = ConnectionFactory.getDBConnection();
@@ -62,14 +60,13 @@ public class UserDAO {
 			stmt.setString(7, user.getPassword());
 			stmt.setString(8, user.getEmail());
 			stmt.setBlob(9, user.getPicture());
-			stmt.setString(10, user.getToken());
 
 			if(user.getIdHome() >0){
-				stmt.setInt(11, user.getIdHome());
-				stmt.setString(12, user.getIdUser());
+				stmt.setInt(10, user.getIdHome());
+				stmt.setString(11, user.getIdUser());
 
 			}else {
-				stmt.setString(11, user.getIdUser());
+				stmt.setString(10, user.getIdUser());
 			}
 
 			rows = stmt.executeUpdate();
@@ -103,8 +100,7 @@ public class UserDAO {
 						rs.getString("email"),
 						rs.getString("profile"),
 						rs.getInt("idHome"),
-						rs.getBlob("picture"),
-						rs.getString("token"));
+						rs.getBlob("picture"));
 			}
 
 			stmt.close();
@@ -151,8 +147,7 @@ public class UserDAO {
 						rs.getString("email"),
 						rs.getString("profile"),
 						rs.getInt("idHome"),
-						rs.getBlob("picture"),
-						rs.getString("token")));
+						rs.getBlob("picture")));
 
 			}
 		} catch (SQLException ex) {
@@ -179,8 +174,7 @@ public class UserDAO {
 						rs.getString("email"),
 						rs.getString("profile"),
 						rs.getInt("idHome"),
-						rs.getBlob("picture"),
-						rs.getString("token")
+						rs.getBlob("picture")
 				));
 			}
 
@@ -212,8 +206,7 @@ public class UserDAO {
 						rs.getString("email"),
 						rs.getString("profile"),
 						rs.getInt("idHome"),
-						rs.getBlob("picture"),
-						rs.getString("token"));
+						rs.getBlob("picture"));
 			}
 
 			stmt.close();
@@ -243,8 +236,7 @@ public class UserDAO {
 						rs.getString("email"),
 						rs.getString("profile"),
 						rs.getInt("idHome"),
-						rs.getBlob("picture"),
-						rs.getString("token")));
+						rs.getBlob("picture")));
 			}
 
 		} catch (SQLException ex) {

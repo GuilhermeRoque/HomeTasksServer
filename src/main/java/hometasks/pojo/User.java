@@ -17,11 +17,10 @@ public class User {
 	private String profile;
 	private int idHome;
 	private Blob picture;
-	private String token;
 
 	public User(){}
 
-	public User(String idUser, String name, String date, String gender, int points, String telephone, String password, String email, String profile, int idHome, Blob picture, String token) {
+	public User(String idUser, String name, String date, String gender, int points, String telephone, String password, String email, String profile, int idHome, Blob picture) {
 		this.idUser = idUser;
 		this.name = name;
 		this.date = date;
@@ -33,7 +32,6 @@ public class User {
 		this.profile = profile;
 		this.idHome = idHome;
 		this.picture = picture;
-		this.token = token;
 	}
 
 	public String getIdUser() {
@@ -124,12 +122,5 @@ public class User {
 		this.picture = picture;
 	}
 
-	public String getToken() {
-		return token;
-	}
-
-	public void setToken(String token) {
-		this.token = token;
-	}
 }
 

@@ -14,7 +14,7 @@ import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
 public class RuleDAO {
 
-	public int createRoutine(Rule rule) {
+	public int createRule(Rule rule) {
 		String sql = "insert into Regra (descricao,estado,valor,idUsuario,idCasa,data,nome) " +
 				"values (?,?,?,?,?,?,?);";
 		int id = 0;

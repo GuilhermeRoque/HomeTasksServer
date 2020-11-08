@@ -1,45 +1,34 @@
 package hometasks.rest;
 import hometasks.db.dao.*;
 import hometasks.pojo.*;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import java.security.Key;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Base64;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+
 @Path("/")
 public class Controller {
-    UserDAO userDAO = new UserDAO();
-    TaskDAO taskDAO = new TaskDAO();
-    HomeDAO homeDAO = new HomeDAO();
-    PaymentDAO paymentDAO = new PaymentDAO();
-    RuleDAO ruleDAO = new RuleDAO();
-    CommentDAO commentDAO = new CommentDAO();
+    private final UserDAO userDAO = new UserDAO();
+    private final TaskDAO taskDAO = new TaskDAO();
+    private final HomeDAO homeDAO = new HomeDAO();
+    private final PaymentDAO paymentDAO = new PaymentDAO();
+    private final RuleDAO ruleDAO = new RuleDAO();
+    private final CommentDAO commentDAO = new CommentDAO();
+    final static Key secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
-    private String createToken(String credentials) {
-        String token = null;
-        String millis = String.valueOf(System.currentTimeMillis());
-        credentials = credentials + millis;
-        try {
-            MessageDigest m = MessageDigest.getInstance("SHA-1");
-            m.update(credentials.getBytes(), 0, credentials.length());
-            byte[] digest = m.digest();
-            token = new BigInteger(1, digest).toString(16);
-            System.out.println("SHA-1: " + token);
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        return token;
-
-    }
 
     @Path("/login")
     @POST
@@ -52,8 +41,18 @@ public class Controller {
             if (log.length == 2) {
                 User user = this.userDAO.getUser(log[0]);
                 if (user != null && user.getPassword().compareTo(log[1]) == 0) {
-                    String token = createToken(credential);
-                    user.setToken(token);
+                    String token = Jwts.builder()
+                            .setIssuer("localhost:8080")
+                            .setSubject(user.getIdUser())
+                            .setExpiration(
+                                    Date.from(
+                                            LocalDateTime.now().plusMinutes(15L)
+                                                    .atZone(ZoneId.systemDefault())
+                                                    .toInstant()))
+                            .setIssuedAt(new Date())
+                            .signWith(secretKey)
+                            .compact();
+
                     this.userDAO.updateUser(user);
                     user.setPassword(null);
                     return Response.status(Response.Status.OK).entity(user).build();
@@ -97,7 +96,6 @@ public class Controller {
             if (users != null) {
                 for (User u : users) {
                     u.setPassword(null);
-                    u.setToken(null);
                 }
                 return Response.ok(users).build();
 
@@ -108,19 +106,20 @@ public class Controller {
         return Response.status(Response.Status.UNAUTHORIZED).build();
     }
 
+    @Authorize
     @Path("/users/{idUser}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response searchUsers(@PathParam("idUser") String idUser, @HeaderParam("token") String token) {
-        User user = this.userDAO.getUserToken(token);
+        User user = this.userDAO.getUser(idUser);
         if (user != null) {
             user.setPassword(null);
-            user.setToken(null);
             return Response.ok(user).build();
         }
         return Response.status(Response.Status.UNAUTHORIZED).build();
     }
 
+    @Authorize
     @Path("/users/home")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -133,7 +132,6 @@ public class Controller {
                 if (usersHome.size() > 0) {
                     for (User u : usersHome) {
                         u.setPassword(null);
-                        u.setToken(null);
                     }
                     return Response.ok(usersHome).build();
                 }
@@ -147,7 +145,7 @@ public class Controller {
         }
         return Response.status(Response.Status.UNAUTHORIZED).build();
     }
-
+    @Authorize
     @Path("/users")
     @PUT
     @Produces(MediaType.APPLICATION_JSON + "; charset=UTF-8")
@@ -157,7 +155,6 @@ public class Controller {
             User user = this.userDAO.getUserToken(token);
             if (user != null) {
                 if (user.getIdUser().compareTo(updateUser.getIdUser()) == 0) {
-                    updateUser.setToken(user.getToken());
                     if (updateUser.getPassword() == null) {
                         updateUser.setPassword(user.getPassword());
                     }
@@ -174,6 +171,7 @@ public class Controller {
         return Response.status(Response.Status.BAD_REQUEST).build();
     }
 
+    @Authorize
     @Path("/tasks/{state}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -470,7 +468,7 @@ public class Controller {
             newRule.setState(userToken.getProfile().compareToIgnoreCase("owner") == 0);
             newRule.setIdHome(idCasa);
             newRule.setIdUser(userToken.getIdUser());
-            int idRule = this.ruleDAO.createRoutine(newRule);
+            int idRule = this.ruleDAO.createRule(newRule);
             if (idRule > 0) {
                 newRule.setIdRule(idRule);
                 return Response.status(Response.Status.CREATED).entity(newRule).build();
