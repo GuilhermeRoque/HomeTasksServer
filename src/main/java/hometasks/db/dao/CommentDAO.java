@@ -1,7 +1,7 @@
-package com.bsc.hometasks.db.dao;
+package hometasks.db.dao;
 
-import com.bsc.hometasks.db.ConnectionFactory;
-import com.bsc.hometasks.pojo.Comentario;
+import hometasks.db.ConnectionFactory;
+import hometasks.pojo.Comment;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,19 +12,19 @@ import java.util.List;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
-public class ComentarioDAO {
+public class CommentDAO {
 
-	public int criaComentario(Comentario comentario) {
+	public int createComment(Comment comment) {
 		String sql = "insert into Comentario (texto,midia,data,idTarefa,idUsuario) values (?,?,?,?,?)";
 		int id = 0;
-		try (Connection conexao = ConnectionFactory.getDBConnection();
-			 PreparedStatement stmt = conexao.prepareStatement(sql,RETURN_GENERATED_KEYS)) {
+		try (Connection conn = ConnectionFactory.getDBConnection();
+			 PreparedStatement stmt = conn.prepareStatement(sql,RETURN_GENERATED_KEYS)) {
 
-			stmt.setString(1,comentario.getTexto());
-			stmt.setBlob(2,comentario.getMidia());
-			stmt.setString(3,comentario.getData());
-			stmt.setInt(4,comentario.getIdTarefa());
-			stmt.setString(5,comentario.getIdUsuario());
+			stmt.setString(1, comment.getText());
+			stmt.setBlob(2, comment.getMidia());
+			stmt.setString(3, comment.getDate());
+			stmt.setInt(4, comment.getIdTask());
+			stmt.setString(5, comment.getIdUser());
 			stmt.execute();
 
 
@@ -40,17 +40,17 @@ public class ComentarioDAO {
 		return id;
 	}
 
-	public int atualizaComentario(Comentario comentario) {
+	public int updateComment(Comment comment) {
 		String sql = "update Comentario set texto = ?, midia = ?, data = ? where " +
 				"idComentario = ?";
 		int rows = 0;
-		try (Connection conexao = ConnectionFactory.getDBConnection();
-			 PreparedStatement stmt = conexao.prepareStatement(sql,RETURN_GENERATED_KEYS)) {
+		try (Connection conn = ConnectionFactory.getDBConnection();
+			 PreparedStatement stmt = conn.prepareStatement(sql,RETURN_GENERATED_KEYS)) {
 
-			stmt.setString(1,comentario.getTexto());
-			stmt.setBlob(2,comentario.getMidia());
-			stmt.setString(3,comentario.getData());
-			stmt.setInt(4,comentario.getIdComentario());
+			stmt.setString(1, comment.getText());
+			stmt.setBlob(2, comment.getMidia());
+			stmt.setString(3, comment.getDate());
+			stmt.setInt(4, comment.getIdComment());
 			rows = stmt.executeUpdate();
 		} catch (SQLException ex) {
 			System.err.println(ex.toString());
@@ -58,18 +58,18 @@ public class ComentarioDAO {
 		return rows;
 	}
 
-	public Comentario buscaComentario(int idTarefa, String idUsuario) {
+	public Comment getCommentUserTask(int idTarefa, String idUsuario) {
 		String sql = "select * from Comentario where idUsuario = ? and idTarefa = ?";
-		Comentario comentario = null;
-		try (Connection conexao = ConnectionFactory.getDBConnection();
-			 PreparedStatement stmt = conexao.prepareStatement(sql)) {
+		Comment comment = null;
+		try (Connection conn = ConnectionFactory.getDBConnection();
+			 PreparedStatement stmt = conn.prepareStatement(sql)) {
 
 			stmt.setString(1,idUsuario);
 			stmt.setInt(2,idTarefa);
 			ResultSet rs = stmt.executeQuery();
 
 			if(rs.next()){
-				comentario = new Comentario(
+				comment = new Comment(
 						rs.getInt("idComentario"),
 						rs.getString("texto"),
 						rs.getBlob("midia"),
@@ -82,20 +82,20 @@ public class ComentarioDAO {
 		} catch (SQLException ex) {
 			System.err.println(ex.toString());
 		}
-		return comentario;
+		return comment;
 	}
 
-	public Comentario buscaComentarioById(int idComentario) {
+	public Comment getComment(int idComentario) {
 		String sql = "select * from Comentario where idComentario = ?";
-		Comentario comentario = null;
-		try (Connection conexao = ConnectionFactory.getDBConnection();
-			 PreparedStatement stmt = conexao.prepareStatement(sql)) {
+		Comment comment = null;
+		try (Connection conn = ConnectionFactory.getDBConnection();
+			 PreparedStatement stmt = conn.prepareStatement(sql)) {
 
 			stmt.setInt(1,idComentario);
 			ResultSet rs = stmt.executeQuery();
 
 			if(rs.next()){
-				comentario = new Comentario(
+				comment = new Comment(
 						rs.getInt("idComentario"),
 						rs.getString("texto"),
 						rs.getBlob("midia"),
@@ -108,13 +108,12 @@ public class ComentarioDAO {
 		} catch (SQLException ex) {
 			System.err.println(ex.toString());
 		}
-		return comentario;
+		return comment;
 	}
 
-	/*Retorna lista de comentários de uma Tarefa*/
-	public List<Comentario> buscaComentariosTarefa(int idTarefa){
+	public List<Comment> getCommentTask(int idTarefa){
 		String sql = "select * from Comentario where idTarefa = ?";
-		List<Comentario> comentarios = new ArrayList<>();
+		List<Comment> comments = new ArrayList<>();
 		try (Connection conexao = ConnectionFactory.getDBConnection();
 			 PreparedStatement stmt = conexao.prepareStatement(sql)) {
 
@@ -122,7 +121,7 @@ public class ComentarioDAO {
 			ResultSet rs = stmt.executeQuery();
 
 			while(rs.next()){
-				comentarios.add(new Comentario(
+				comments.add(new Comment(
 						rs.getInt("idComentario"),
 						rs.getString("texto"),
 						rs.getBlob("midia"),
@@ -135,7 +134,7 @@ public class ComentarioDAO {
 		} catch (SQLException ex) {
 			System.err.println(ex.toString());
 		}
-		return comentarios;
+		return comments;
 
 	}
 }

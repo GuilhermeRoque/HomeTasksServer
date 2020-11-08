@@ -1,7 +1,7 @@
-package com.bsc.hometasks.db.dao;
+package hometasks.db.dao;
 
-import com.bsc.hometasks.db.ConnectionFactory;
-import com.bsc.hometasks.pojo.Convite;
+import hometasks.db.ConnectionFactory;
+import hometasks.pojo.Invitation;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,19 +12,19 @@ import java.util.List;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
-public class ConviteDAO {
+public class InvitationDAO {
 
-	public int criaConvite(Convite convite) {
+	public int createInvitation(Invitation invitation) {
 		String sql = "insert into Convite (idConvidado,idConvidante,sentido,estado,idCasa) values (?,?,?,?,?)";
 		int id = 0;
 		try (Connection conexao = ConnectionFactory.getDBConnection();
 			 PreparedStatement stmt = conexao.prepareStatement(sql,RETURN_GENERATED_KEYS)) {
 
-			stmt.setString(1,convite.getIdConvidado());
-			stmt.setString(2,convite.getIdConvidante());
-			stmt.setBoolean(3,convite.isSentido());
-			stmt.setBoolean(4,convite.isEstado());
-			stmt.setInt(5,convite.getIdCasa());
+			stmt.setString(1, invitation.getIdGuest());
+			stmt.setString(2, invitation.getIdInviting());
+			stmt.setBoolean(3, invitation.isInvitingIsInitiator());
+			stmt.setBoolean(4, invitation.isState());
+			stmt.setInt(5, invitation.getIdHome());
 			stmt.execute();
 
 
@@ -40,18 +40,18 @@ public class ConviteDAO {
 		return id;
 	}
 
-	public int atualizaConvite(Convite convite) {
+	public int updateInvitation(Invitation invitation) {
 		String sql = "update Convite set sentido = ?, estado = ? where idConvidante = ? " +
 				"and idConvidado = ? and idCasa = ?";
 		int rows = 0;
 		try (Connection conexao = ConnectionFactory.getDBConnection();
 			 PreparedStatement stmt = conexao.prepareStatement(sql,RETURN_GENERATED_KEYS)) {
 
-			stmt.setBoolean(1,convite.isSentido());
-			stmt.setBoolean(2,convite.isEstado());
-			stmt.setString(3,convite.getIdConvidante());
-			stmt.setString(4,convite.getIdConvidado());
-			stmt.setInt(5,convite.getIdCasa());
+			stmt.setBoolean(1, invitation.isInvitingIsInitiator());
+			stmt.setBoolean(2, invitation.isState());
+			stmt.setString(3, invitation.getIdInviting());
+			stmt.setString(4, invitation.getIdGuest());
+			stmt.setInt(5, invitation.getIdHome());
 			stmt.executeUpdate();
 
 
@@ -67,11 +67,11 @@ public class ConviteDAO {
 		return rows;
 	}
 
-	public Convite buscaConvite(String idConvidado, String idConvidante, int idCasa) {
+	public Invitation getInvitation(String idConvidado, String idConvidante, int idCasa) {
 		String sql = "select * from Convite where idConvidante = ? " +
 				"and idConvidado = ? and idCasa = ?";
 
-		Convite convite = null;
+		Invitation invitation = null;
 		try (Connection conexao = ConnectionFactory.getDBConnection();
 			 PreparedStatement stmt = conexao.prepareStatement(sql)) {
 
@@ -81,7 +81,7 @@ public class ConviteDAO {
 			ResultSet rs = stmt.executeQuery();
 
 			if(rs.next()){
-				convite = new Convite(
+				invitation = new Invitation(
 						rs.getString("idConvidado"),
 						rs.getString("idConvidante"),
 						rs.getInt("idCasa"),
@@ -92,10 +92,10 @@ public class ConviteDAO {
 		} catch (SQLException ex) {
 			System.err.println(ex.toString());
 		}
-		return convite;
+		return invitation;
 	}
 
-	public int removeConvite(String idConvidado, String idConvidante, int idCasa) {
+	public int deleteInvitation(String idConvidado, String idConvidante, int idCasa) {
 		String sql = "delete from Convite where idConvidante = ? " +
 				"and idConvidado = ? and idCasa = ?";
 
@@ -114,9 +114,8 @@ public class ConviteDAO {
 		return rows;
 	}
 
-	/*Retorna Lista de convites de um usuario*/
-	public List<Convite> buscaConvitesUsuario(String idUsuario, boolean estado){
-		List<Convite> convites = new ArrayList<>();
+	public List<Invitation> getInvitationUser(String idUsuario, boolean estado){
+		List<Invitation> invitations = new ArrayList<>();
 		String sql = "select * from Convite where (idConvidado = ? or idConvidante = ?) and estado = ?";
 
 		try (Connection conexao = ConnectionFactory.getDBConnection();
@@ -128,7 +127,7 @@ public class ConviteDAO {
 			ResultSet rs = stmt.executeQuery();
 
 			while(rs.next()){
-				convites.add(new Convite(
+				invitations.add(new Invitation(
 						rs.getString("idConvidado"),
 						rs.getString("idConvidante"),
 						rs.getInt("idCasa"),
@@ -140,6 +139,6 @@ public class ConviteDAO {
 			System.err.println(ex.toString());
 		}
 
-		return convites;
+		return invitations;
 	}
 }

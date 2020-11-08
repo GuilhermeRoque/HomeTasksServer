@@ -1,7 +1,7 @@
-package com.bsc.hometasks.db.dao;
+package hometasks.db.dao;
 
-import com.bsc.hometasks.db.ConnectionFactory;
-import com.bsc.hometasks.pojo.Casa;
+import hometasks.db.ConnectionFactory;
+import hometasks.pojo.Home;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,20 +12,20 @@ import java.util.List;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
-public class CasaDAO {
+public class HomeDAO {
 
-	public int criaCasa(Casa casa) {
+	public int createHome(Home home) {
 		String sql = "insert into Casa (nome,descricao,aluguel,endereco,foto) values (?,?,?,?,?);";
 		int id = 0;
 		// Try-with-resources irá fechar automaticamente a conexão
 		try (Connection conexao = ConnectionFactory.getDBConnection();
 			 PreparedStatement stmt = conexao.prepareStatement(sql,RETURN_GENERATED_KEYS)) {
 
-			stmt.setString(1, casa.getNome());
-			stmt.setString(2, casa.getDescricao());
-			stmt.setInt(3, casa.getAluguel());
-			stmt.setString(4, casa.getEndereco());
-			stmt.setBlob(5,casa.getFoto());
+			stmt.setString(1, home.getName());
+			stmt.setString(2, home.getDescription());
+			stmt.setInt(3, home.getRent());
+			stmt.setString(4, home.getAddress());
+			stmt.setBlob(5, home.getPicture());
 			stmt.execute();
 
 			ResultSet rs = stmt.getGeneratedKeys();
@@ -40,19 +40,19 @@ public class CasaDAO {
 		return id;
 	}
 
-	public int atualizaCasa(Casa casa) {
+	public int updateHome(Home home) {
 		String sql = "update Casa set nome = ?, descricao = ?, aluguel = ?, endereco = ?, foto = ?" +
 				" where idCasa = ?";
 		int rows = 0;
 		try (Connection conexao = ConnectionFactory.getDBConnection();
 			 PreparedStatement stmt = conexao.prepareStatement(sql,RETURN_GENERATED_KEYS)) {
 
-			stmt.setString(1, casa.getNome());
-			stmt.setString(2, casa.getDescricao());
-			stmt.setInt(3, casa.getAluguel());
-			stmt.setString(4, casa.getEndereco());
-			stmt.setBlob(5,casa.getFoto());
-			stmt.setInt(6, casa.getIdCasa());
+			stmt.setString(1, home.getName());
+			stmt.setString(2, home.getDescription());
+			stmt.setInt(3, home.getRent());
+			stmt.setString(4, home.getAddress());
+			stmt.setBlob(5, home.getPicture());
+			stmt.setInt(6, home.getIdHome());
 
 			rows = stmt.executeUpdate();
 		} catch (SQLException ex) {
@@ -61,15 +61,15 @@ public class CasaDAO {
 		return rows;
 	}
 
-	public Casa buscaCasa(int id) {
+	public Home getHome(int id) {
 		String sql = "SELECT * from Casa where idCasa = "+id;
 
-		Casa casa = null;
+		Home home = null;
 		try (Connection conexao = ConnectionFactory.getDBConnection();
 			 PreparedStatement stmt = conexao.prepareStatement(sql);
 			 ResultSet rs = stmt.executeQuery()) {
 			if (rs.next()) {
-				casa = new Casa(
+				home = new Home(
 						rs.getInt("idCasa"),
 						rs.getString("nome"),
 						rs.getString("endereco"),
@@ -81,10 +81,10 @@ public class CasaDAO {
 			System.err.println(ex.toString());
 		}
 
-		return casa;
+		return home;
 	}
 
-	public int removeCasa(int id) {
+	public int deleteHome(int id) {
 		String sql = "DELETE from Casa where idCasa = ?";
 		int rows = 0;
 		try (Connection conexao = ConnectionFactory.getDBConnection();
@@ -101,15 +101,15 @@ public class CasaDAO {
 	}
 
 	/*Retorna Lista de Casas com o nome parecido com o parâmetro 'nome' de entrada*/
-	public List<Casa> buscaCasasNome(String nome) {
+	public List<Home> buscaCasasNome(String nome) {
 		String sql = "SELECT * from Casa where nome like '%"+nome+"%' limit 100";
-		List<Casa> casas = new ArrayList<>();
+		List<Home> homes = new ArrayList<>();
 		try (Connection conexao = ConnectionFactory.getDBConnection();
 			 PreparedStatement stmt = conexao.prepareStatement(sql);
 			 ResultSet rs = stmt.executeQuery()) {
 
 			while (rs.next()) {
-				casas.add(new Casa(
+				homes.add(new Home(
 						rs.getInt("idCasa"),
 						rs.getString("nome"),
 						rs.getString("endereco"),
@@ -120,19 +120,19 @@ public class CasaDAO {
 		} catch (SQLException ex) {
 			System.err.println(ex.toString());
 		}
-		return casas;
+		return homes;
 	}
 
 	/*Retorna Lista de Casas com o endereço parecido com o parâmetro 'endereco' de entrada*/
-	public List<Casa> buscaCasasEndereco(String endereco) {
+	public List<Home> buscaCasasEndereco(String endereco) {
 		String sql = "SELECT * from Casa where endereco like '%"+endereco+"%' limit 100";
-		List<Casa> casas = new ArrayList<>();
+		List<Home> homes = new ArrayList<>();
 		try (Connection conexao = ConnectionFactory.getDBConnection();
 			 PreparedStatement stmt = conexao.prepareStatement(sql);
 			 ResultSet rs = stmt.executeQuery()) {
 
 			while (rs.next()) {
-				casas.add(new Casa(
+				homes.add(new Home(
 						rs.getInt("idCasa"),
 						rs.getString("nome"),
 						rs.getString("endereco"),
@@ -143,7 +143,7 @@ public class CasaDAO {
 		} catch (SQLException ex) {
 			System.err.println(ex.toString());
 		}
-		return casas;
+		return homes;
 	}
 
 }

@@ -1,7 +1,7 @@
-package com.bsc.hometasks.db.dao;
+package hometasks.db.dao;
 
-import com.bsc.hometasks.db.ConnectionFactory;
-import com.bsc.hometasks.pojo.Regra;
+import hometasks.db.ConnectionFactory;
+import hometasks.pojo.Rule;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,22 +12,22 @@ import java.util.List;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
-public class RegraDAO {
+public class RuleDAO {
 
-	public int criaRegra(Regra regra) {
+	public int createRoutine(Rule rule) {
 		String sql = "insert into Regra (descricao,estado,valor,idUsuario,idCasa,data,nome) " +
 				"values (?,?,?,?,?,?,?);";
 		int id = 0;
 		try (Connection conexao = ConnectionFactory.getDBConnection();
 			 PreparedStatement stmt = conexao.prepareStatement(sql,RETURN_GENERATED_KEYS)) {
 
-			stmt.setString(1, regra.getDescricao());
-			stmt.setBoolean(2,regra.isEstado());
-			stmt.setInt(3, regra.getValor());
-			stmt.setString(4, regra.getIdUsuario());
-			stmt.setInt(5,regra.getIdCasa());
-			stmt.setString(6, regra.getData());
-			stmt.setString(7, regra.getNome());
+			stmt.setString(1, rule.getDescription());
+			stmt.setBoolean(2, rule.isState());
+			stmt.setInt(3, rule.getValue());
+			stmt.setString(4, rule.getIdUser());
+			stmt.setInt(5, rule.getIdHome());
+			stmt.setString(6, rule.getDate());
+			stmt.setString(7, rule.getName());
 			stmt.execute();
 
 
@@ -43,7 +43,7 @@ public class RegraDAO {
 		return id;
 	}
 
-	public int atualizaRegra(Regra regra) {
+	public int updateRule(Rule rule) {
 		String sql = "update Regra set descricao = ?, estado = ?," +
 				"valor = ?, idUsuario = ?, data = ?, nome = ? where idRegra = ?";
 
@@ -51,13 +51,13 @@ public class RegraDAO {
 		try (Connection conexao = ConnectionFactory.getDBConnection();
 			 PreparedStatement stmt = conexao.prepareStatement(sql,RETURN_GENERATED_KEYS)) {
 
-			stmt.setString(1, regra.getDescricao());
-			stmt.setBoolean(2,regra.isEstado());
-			stmt.setInt(3, regra.getValor());
-			stmt.setString(4, regra.getIdUsuario());
-			stmt.setString(5, regra.getData());
-			stmt.setString(6,regra.getNome());
-			stmt.setInt(7,regra.getIdRegra());
+			stmt.setString(1, rule.getDescription());
+			stmt.setBoolean(2, rule.isState());
+			stmt.setInt(3, rule.getValue());
+			stmt.setString(4, rule.getIdUser());
+			stmt.setString(5, rule.getDate());
+			stmt.setString(6, rule.getName());
+			stmt.setInt(7, rule.getIdRule());
 			System.out.println("linhas " + rows);
 			rows = stmt.executeUpdate();
 
@@ -67,9 +67,9 @@ public class RegraDAO {
 		return rows;
 	}
 
-	public Regra buscaRegra(int idRegra) {
+	public Rule getRule(int idRegra) {
 		String sql = "select * from  Regra where idRegra = ?";
-		Regra regra = null;
+		Rule rule = null;
 		try (Connection conexao = ConnectionFactory.getDBConnection();
 			 PreparedStatement stmt = conexao.prepareStatement(sql)) {
 
@@ -77,7 +77,7 @@ public class RegraDAO {
 			ResultSet rs = stmt.executeQuery();
 
 			if(rs.next()){
-				regra = new Regra(
+				rule = new Rule(
 						rs.getInt("idRegra"),
 						rs.getString("nome"),
 						rs.getString("descricao"),
@@ -93,10 +93,10 @@ public class RegraDAO {
 		} catch (SQLException ex) {
 			System.err.println(ex.toString());
 		}
-		return  regra;
+		return rule;
 	}
 
-	public int removeRegra(int idRegra, int idCasa) {
+	public int deleteRule(int idRegra, int idCasa) {
 		String sql = "delete from  Regra where idRegra = ? and idCasa = ?";
 		int rows = 0;
 		try (Connection conexao = ConnectionFactory.getDBConnection();
@@ -112,10 +112,9 @@ public class RegraDAO {
 		return rows;
 	}
 
-	/*Retorna uma lista com as regras da Casa*/
-	public List<Regra> buscaRegrasCasa(int idCasa) {
+	public List<Rule> getRulesHome(int idCasa) {
 		String sql = "select * from  Regra where idCasa = ?";
-		List<Regra> regras = new ArrayList<>();
+		List<Rule> rules = new ArrayList<>();
 		try (Connection conexao = ConnectionFactory.getDBConnection();
 			 PreparedStatement stmt = conexao.prepareStatement(sql)) {
 
@@ -123,7 +122,7 @@ public class RegraDAO {
 			ResultSet rs = stmt.executeQuery();
 
 			while(rs.next()){
-				regras.add(new Regra(
+				rules.add(new Rule(
 						rs.getInt("idRegra"),
 						rs.getString("nome"),
 						rs.getString("descricao"),
@@ -139,7 +138,7 @@ public class RegraDAO {
 		} catch (SQLException ex) {
 			System.err.println(ex.toString());
 		}
-		return  regras;
+		return rules;
 	}
 
 }

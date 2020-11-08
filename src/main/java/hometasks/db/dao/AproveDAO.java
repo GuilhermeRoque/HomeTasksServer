@@ -1,7 +1,7 @@
-package com.bsc.hometasks.db.dao;
+package hometasks.db.dao;
 
-import com.bsc.hometasks.db.ConnectionFactory;
-import com.bsc.hometasks.pojo.Aprova;
+import hometasks.db.ConnectionFactory;
+import hometasks.pojo.Aprove;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,17 +12,17 @@ import java.util.List;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
-public class AprovaDAO {
+public class AproveDAO {
 
-    public int criaAprova(Aprova aprova){
+    public int createAprove(Aprove aprove){
         String sql = "insert into Aprova (idUsuario,idRegra,estado) values (?,?,?)";
         int id = 0;
         try (Connection conexao = ConnectionFactory.getDBConnection();
              PreparedStatement stmt = conexao.prepareStatement(sql,RETURN_GENERATED_KEYS)) {
 
-            stmt.setString(1,aprova.getIdUsuario());
-            stmt.setInt(2,aprova.getIdRegra());
-            stmt.setBoolean(3,aprova.isEstado());
+            stmt.setString(1, aprove.getIdUser());
+            stmt.setInt(2, aprove.getIdRule());
+            stmt.setBoolean(3, aprove.isState());
             stmt.execute();
 
 
@@ -38,15 +38,15 @@ public class AprovaDAO {
         return id;
     }
 
-    public int atualizaAprova(Aprova aprova){
+    public int updateAprove(Aprove aprove){
         String sql = "update Aprova set estado = ? where idUsuario = ? and idRegra = ?";
         int rows = 0;
         try (Connection conexao = ConnectionFactory.getDBConnection();
              PreparedStatement stmt = conexao.prepareStatement(sql)) {
 
-            stmt.setBoolean(1,aprova.isEstado());
-            stmt.setString(2,aprova.getIdUsuario());
-            stmt.setInt(3,aprova.getIdRegra());
+            stmt.setBoolean(1, aprove.isState());
+            stmt.setString(2, aprove.getIdUser());
+            stmt.setInt(3, aprove.getIdRule());
             rows = stmt.executeUpdate();
 
 
@@ -57,9 +57,9 @@ public class AprovaDAO {
         return rows;
     }
 
-    public Aprova buscaAprova(String idUsuario, int idRegra){
+    public Aprove getAprove(String idUsuario, int idRegra){
         String sql = "select * from Aprova where idUsuario = ? and idRegra = ?";
-        Aprova aprova = null;
+        Aprove aprove = null;
         try (Connection conexao = ConnectionFactory.getDBConnection();
              PreparedStatement stmt = conexao.prepareStatement(sql)) {
 
@@ -68,7 +68,7 @@ public class AprovaDAO {
             ResultSet rs = stmt.executeQuery();
 
             if(rs.next()){
-                aprova = new Aprova(
+                aprove = new Aprove(
                         rs.getString("idUsuario"),
                         rs.getInt("idRegra"),
                         rs.getBoolean("estado"));
@@ -78,15 +78,12 @@ public class AprovaDAO {
         } catch (SQLException ex) {
             System.err.println(ex.toString());
         }
-        return aprova;
+        return aprove;
     }
 
-    /*
-    Retorna lista de aprovação de uma determinada Regra
-    */
-    public List<Aprova> buscaAprovaRegra(int idRegra){
+    public List<Aprove> getAproveRule(int idRegra){
         String sql = "select * from Aprova where idRegra = ?";
-        List<Aprova> aprovas = new ArrayList<>();
+        List<Aprove> aproves = new ArrayList<>();
         try (Connection conexao = ConnectionFactory.getDBConnection();
              PreparedStatement stmt = conexao.prepareStatement(sql)) {
 
@@ -94,7 +91,7 @@ public class AprovaDAO {
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()){
-                aprovas.add(new Aprova(
+                aproves.add(new Aprove(
                         rs.getString("idUsuario"),
                         rs.getInt("idRegra"),
                         rs.getBoolean("estado")));
@@ -104,10 +101,6 @@ public class AprovaDAO {
         } catch (SQLException ex) {
             System.err.println(ex.toString());
         }
-        return aprovas;
+        return aproves;
     }
-
-
-
-
 }

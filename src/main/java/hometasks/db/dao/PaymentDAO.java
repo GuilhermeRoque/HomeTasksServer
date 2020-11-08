@@ -1,7 +1,7 @@
-package com.bsc.hometasks.db.dao;
+package hometasks.db.dao;
 
-import com.bsc.hometasks.db.ConnectionFactory;
-import com.bsc.hometasks.pojo.Pagamento;
+import hometasks.db.ConnectionFactory;
+import hometasks.pojo.Payment;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,20 +12,20 @@ import java.util.List;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
-public class PagamentoDAO {
+public class PaymentDAO {
 
-	public int criaPagamento(Pagamento pagamento) {
+	public int createPayment(Payment payment) {
 		String sql = "insert into Pagamento (idCredor,idDevedor,valor,data,juros,descricao,pago) values (?,?,?,?,?,?,?);";
 		int id = 0;
 		try (Connection conexao = ConnectionFactory.getDBConnection();
 			 PreparedStatement stmt = conexao.prepareStatement(sql,RETURN_GENERATED_KEYS)) {
 
-			stmt.setString(1, pagamento.getIdCredor());
-			stmt.setString(2, pagamento.getIdDevedor());
-			stmt.setFloat(3, pagamento.getValor());
-			stmt.setString(4, pagamento.getData());
-			stmt.setInt(5, pagamento.getJuros());
-			stmt.setString(6,pagamento.getDescricao());
+			stmt.setString(1, payment.getIdCreditor());
+			stmt.setString(2, payment.getIdDebtor());
+			stmt.setFloat(3, payment.getValue());
+			stmt.setString(4, payment.getDate());
+			stmt.setInt(5, payment.getInterest());
+			stmt.setString(6, payment.getDescription());
 			stmt.setBoolean(7,false);
 
 			stmt.execute();
@@ -42,21 +42,21 @@ public class PagamentoDAO {
 		return id;
 	}
 
-	public int atualizaPagamento(Pagamento pagamento) {
+	public int updatePayment(Payment payment) {
 		String sql = "update Pagamento set valor = ?," +
 				"data = ?,juros = ?, descricao = ?, pago = ? where idPagamento = ? and idCredor = ? and idDevedor = ?;";
 		int rows = 0;
 		try (Connection conexao = ConnectionFactory.getDBConnection();
 			 PreparedStatement stmt = conexao.prepareStatement(sql)) {
 
-			stmt.setFloat(1, pagamento.getValor());
-			stmt.setString(2, pagamento.getData());
-			stmt.setInt(3, pagamento.getJuros());
-			stmt.setString(4,pagamento.getDescricao());
-			stmt.setBoolean(5,pagamento.isPago());
-			stmt.setInt(6,pagamento.getIdPagamento());
-			stmt.setString(7, pagamento.getIdCredor());
-			stmt.setString(8, pagamento.getIdDevedor());
+			stmt.setFloat(1, payment.getValue());
+			stmt.setString(2, payment.getDate());
+			stmt.setInt(3, payment.getInterest());
+			stmt.setString(4, payment.getDescription());
+			stmt.setBoolean(5, payment.isDone());
+			stmt.setInt(6, payment.getIdPayment());
+			stmt.setString(7, payment.getIdCreditor());
+			stmt.setString(8, payment.getIdDebtor());
 			rows = stmt.executeUpdate();
 
 		} catch (SQLException ex) {
@@ -65,12 +65,12 @@ public class PagamentoDAO {
 		return rows;
 	}
 
-	public List<Pagamento> buscaPagamento(String idUsuario) {
+	public List<Payment> getPaymentUser(String idUsuario) {
 
-		List<Pagamento> pagamentos = new ArrayList<>();
+		List<Payment> payments = new ArrayList<>();
 		String sql = "SELECT * from Pagamento where (idCredor = ? or idDevedor = ?) and (pago is false or pago is NULL) ";
 
-		Pagamento pagamento = null;
+		Payment payment = null;
 		try (Connection conexao = ConnectionFactory.getDBConnection();
 			 PreparedStatement stmt = conexao.prepareStatement(sql)) {
 
@@ -79,7 +79,7 @@ public class PagamentoDAO {
 			ResultSet rs = stmt.executeQuery();
 
 			while(rs.next()){
-				pagamentos.add(new Pagamento(
+				payments.add(new Payment(
 						rs.getInt("idPagamento"),
 						rs.getString("idDevedor"),
 						rs.getString("idCredor"),
@@ -94,18 +94,18 @@ public class PagamentoDAO {
 		} catch (SQLException ex) {
 			System.err.println(ex.toString());
 		}
-		return pagamentos;
+		return payments;
 	}
 
-	public int removePagamento(Pagamento pagamento) {
+	public int deletePayment(Payment payment) {
 		String sql = "DELETE from Pagamento where idPagamento = ? and idCredor = ? and idDevedor = ?";
 		int rows = 0;
 		try (Connection conexao = ConnectionFactory.getDBConnection();
 			 PreparedStatement stmt = conexao.prepareStatement(sql)) {
 
-			stmt.setInt(1, pagamento.getIdPagamento());
-			stmt.setString(2,pagamento.getIdCredor());
-			stmt.setString(3,pagamento.getIdDevedor());
+			stmt.setInt(1, payment.getIdPayment());
+			stmt.setString(2, payment.getIdCreditor());
+			stmt.setString(3, payment.getIdDebtor());
 			rows = stmt.executeUpdate();
 
 		} catch (SQLException ex) {
@@ -114,11 +114,11 @@ public class PagamentoDAO {
 		return rows;
 	}
 
-	public Pagamento buscaPagamentoById(int idPagamento) {
+	public Payment getPayment(int idPagamento) {
 
 
 		String sql = "SELECT * from Pagamento where idPagamento = ?";
-		Pagamento pagamento = null;
+		Payment payment = null;
 
 		try (Connection conexao = ConnectionFactory.getDBConnection();
 			 PreparedStatement stmt = conexao.prepareStatement(sql)) {
@@ -127,7 +127,7 @@ public class PagamentoDAO {
 			ResultSet rs = stmt.executeQuery();
 
 			if(rs.next()){
-				pagamento = new Pagamento(
+				payment = new Payment(
 						rs.getInt("idPagamento"),
 						rs.getString("idDevedor"),
 						rs.getString("idCredor"),
@@ -142,7 +142,7 @@ public class PagamentoDAO {
 		} catch (SQLException ex) {
 			System.err.println(ex.toString());
 		}
-		return pagamento;
+		return payment;
 	}
 
 }
