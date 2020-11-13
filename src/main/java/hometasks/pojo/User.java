@@ -1,26 +1,49 @@
 package hometasks.pojo;
-
+import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.io.Serializable;
 import java.sql.Blob;
 
 @XmlRootElement
-public class User {
+@Entity
+@Table
+public class User implements Serializable {
 
+	@Id
+	@Column(name="idUser",unique = true)
 	private String idUser;
+
+	@Column(name="name",nullable = false)
 	private String name;
+
+	@Column(name="date",nullable = false)
 	private String date;
+
+	@Column(name="gender",nullable = false)
 	private String gender;
+
+	@Column(name="points",nullable = false)
 	private int points;
+
+	@Column(name="telephone",nullable = false)
 	private String telephone;
+
+	@Column(name="password",nullable = false)
 	private String password;
+
+	@Column(name="email",nullable = false)
 	private String email;
+
+	@Column(name="profile",nullable = false)
 	private String profile;
-	private int idHome;
+
+
+	@Column(name="picture")
 	private Blob picture;
 
 	public User(){}
 
-	public User(String idUser, String name, String date, String gender, int points, String telephone, String password, String email, String profile, int idHome, Blob picture) {
+	public User(String idUser, String name, String date, String gender, int points, String telephone, String password, String email, String profile, Blob picture) {
 		this.idUser = idUser;
 		this.name = name;
 		this.date = date;
@@ -30,7 +53,6 @@ public class User {
 		this.password = password;
 		this.email = email;
 		this.profile = profile;
-		this.idHome = idHome;
 		this.picture = picture;
 	}
 
@@ -106,14 +128,6 @@ public class User {
 		this.profile = profile;
 	}
 
-	public int getIdHome() {
-		return idHome;
-	}
-
-	public void setIdHome(int idHome) {
-		this.idHome = idHome;
-	}
-
 	public Blob getPicture() {
 		return picture;
 	}
@@ -122,5 +136,20 @@ public class User {
 		this.picture = picture;
 	}
 
+	@Override
+	public String toString() {
+		return "User{" +
+				"idUser='" + idUser + '\'' +
+				", name='" + name + '\'' +
+				", date='" + date + '\'' +
+				", gender='" + gender + '\'' +
+				", points=" + points +
+				", telephone='" + telephone + '\'' +
+				", password='" + password + '\'' +
+				", email='" + email + '\'' +
+				", profile='" + profile + '\'' +
+				", picture=" + picture +
+				'}';
+	}
 }
 
