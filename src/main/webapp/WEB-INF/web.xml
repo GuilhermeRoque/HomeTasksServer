@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app version="3.1">
+    <web-app version="3.1">
     <display-name>HomeTasks</display-name>
     <servlet>
-        <servlet-name>hometasksREST</servlet-name>
+        <servlet-name>HomeTasks</servlet-name>
         <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
         <init-param>
             <param-name>jersey.config.server.provider.packages</param-name>
@@ -15,7 +15,7 @@
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet-mapping>
-        <servlet-name>hometasksREST</servlet-name>
+        <servlet-name>HomeTasks</servlet-name>
         <url-pattern>/hometasks/api/v1/*</url-pattern>
     </servlet-mapping>
 </web-app>
