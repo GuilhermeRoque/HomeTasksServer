@@ -55,7 +55,7 @@ public class Controller {
 
                     this.userDAO.updateUser(user);
                     user.setPassword(null);
-                    return Response.status(Response.Status.OK).entity(user).build();
+                    return Response.status(Response.Status.OK).entity("{\"token\": \"" + token +"\" }").build();
                 }
                 return Response.status(Response.Status.UNAUTHORIZED).build();
             }
