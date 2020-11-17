@@ -1,4 +1,4 @@
-package hometasks.db;
+package db;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;

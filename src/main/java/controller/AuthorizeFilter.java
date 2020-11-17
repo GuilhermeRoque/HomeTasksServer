@@ -1,4 +1,4 @@
-package hometasks.rest;
+package controller;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.IOException;
@@ -10,7 +10,7 @@ import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
-import static hometasks.rest.Controller.secretKey;
+import static controller.App.secretKey;
 
 
 @Provider

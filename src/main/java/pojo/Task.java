@@ -1,4 +1,4 @@
-package hometasks.pojo;
+package pojo;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

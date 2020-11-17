@@ -1,4 +1,4 @@
-package hometasks.rest;
+package controller;
 
 import javax.ws.rs.NameBinding;
 import java.lang.annotation.ElementType;
