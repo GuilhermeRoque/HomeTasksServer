@@ -1,9 +1,6 @@
 package pojo;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
@@ -15,20 +12,11 @@ public class Task {
 	@Column(name="idTask",unique = true)
 	private  int idTask;
 
-	@Column(name="idHome",nullable = false)
-	private int idHome;
-
 	@Column(name="name",nullable = false)
 	private String name;
 
 	@Column(name="description",nullable = false)
 	private String description;
-
-	@Column(name="idOwner",nullable = false)
-	private String idOwner;
-
-	@Column(name="idReporter",nullable = false)
-	private String idReporter;
 
 	@Column(name="state",nullable = false)
 	private String state;
@@ -45,19 +33,29 @@ public class Task {
 	@Column(name="renew",nullable = false)
 	private boolean renew;
 
+	@Column(name="idOwner",nullable = false)
+	private String idOwner;
 
-	public Task(int idTask, int idHome, String name, String description, String idOwner, String idReporter, String state, String date, float value, boolean alternate, boolean renew) {
+	@Column(name="idReporter",nullable = false)
+	private String idReporter;
+
+	@Column(name="idHome",nullable = false)
+	private int idHome;
+
+	public Task(){}
+
+	public Task(int idTask, String name, String description, String state, String date, float value, boolean alternate, boolean renew, String idOwner, String idReporter, int idHome) {
 		this.idTask = idTask;
-		this.idHome = idHome;
 		this.name = name;
 		this.description = description;
-		this.idOwner = idOwner;
-		this.idReporter = idReporter;
 		this.state = state;
 		this.date = date;
 		this.value = value;
 		this.alternate = alternate;
 		this.renew = renew;
+		this.idOwner = idOwner;
+		this.idReporter = idReporter;
+		this.idHome = idHome;
 	}
 
 	public int getIdTask() {
@@ -66,14 +64,6 @@ public class Task {
 
 	public void setIdTask(int idTask) {
 		this.idTask = idTask;
-	}
-
-	public int getIdHome() {
-		return idHome;
-	}
-
-	public void setIdHome(int idHome) {
-		this.idHome = idHome;
 	}
 
 	public String getName() {
@@ -90,22 +80,6 @@ public class Task {
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public String getIdOwner() {
-		return idOwner;
-	}
-
-	public void setIdOwner(String idOwner) {
-		this.idOwner = idOwner;
-	}
-
-	public String getIdReporter() {
-		return idReporter;
-	}
-
-	public void setIdReporter(String idReporter) {
-		this.idReporter = idReporter;
 	}
 
 	public String getState() {
@@ -146,5 +120,29 @@ public class Task {
 
 	public void setRenew(boolean renew) {
 		this.renew = renew;
+	}
+
+	public String getIdOwner() {
+		return idOwner;
+	}
+
+	public void setIdOwner(String idOwner) {
+		this.idOwner = idOwner;
+	}
+
+	public String getIdReporter() {
+		return idReporter;
+	}
+
+	public void setIdReporter(String idReporter) {
+		this.idReporter = idReporter;
+	}
+
+	public int getIdHome() {
+		return idHome;
+	}
+
+	public void setIdHome(int idHome) {
+		this.idHome = idHome;
 	}
 }

@@ -1,8 +1,10 @@
 package pojo;
+
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.sql.Blob;
+import java.util.List;
 
 @XmlRootElement
 @Entity
@@ -37,10 +39,11 @@ public class User implements Serializable {
 	@Column(name="profile",nullable = false)
 	private String profile;
 
-
 	@Column(name="picture")
 	private Blob picture;
 
+	@ManyToMany(mappedBy = "users")
+	private List<Home> homes;
 	public User(){}
 
 	public User(String idUser, String name, String date, String gender, int points, String telephone, String password, String email, String profile, Blob picture) {
@@ -150,6 +153,14 @@ public class User implements Serializable {
 				", profile='" + profile + '\'' +
 				", picture=" + picture +
 				'}';
+	}
+
+	public List<Home> getHomes() {
+		return homes;
+	}
+
+	public void setHomes(List<Home> homes) {
+		this.homes = homes;
 	}
 }
 
