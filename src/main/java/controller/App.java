@@ -92,6 +92,7 @@ public class App extends BasicApp {
         return Response.ok(newHome).build();
     }
 
+    @Authorize
     @Path("/home")
     @GET
     @Produces(MediaType.APPLICATION_JSON + "; charset=UTF-8")
@@ -101,7 +102,11 @@ public class App extends BasicApp {
         User user = dao.find(User.class, userID);
         List<Home> homes = user.getHomes();
         dao.close();
-        homes.forEach(h->h.setUsers(null));
+        homes.forEach(h->{
+            h.setUsers(null);
+            h.setTasks(null);
+                }
+        );
         return Response.ok(homes).build();
     }
 
@@ -114,6 +119,7 @@ public class App extends BasicApp {
         return this.handlePost(newTask);
     }
 
+    @Authorize
     @Path("/task")
     @GET
     @Produces(MediaType.APPLICATION_JSON + "; charset=UTF-8")

@@ -3,7 +3,6 @@ package pojo;
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
-import java.sql.Blob;
 import java.util.List;
 
 @XmlRootElement
@@ -40,13 +39,13 @@ public class User implements Serializable {
 	private String profile;
 
 	@Column(name="picture")
-	private Blob picture;
+	private byte[] picture;
 
 	@ManyToMany(mappedBy = "users")
 	private List<Home> homes;
 	public User(){}
 
-	public User(String idUser, String name, String date, String gender, int points, String telephone, String password, String email, String profile, Blob picture) {
+	public User(String idUser, String name, String date, String gender, int points, String telephone, String password, String email, String profile, byte[] picture) {
 		this.idUser = idUser;
 		this.name = name;
 		this.date = date;
@@ -131,28 +130,12 @@ public class User implements Serializable {
 		this.profile = profile;
 	}
 
-	public Blob getPicture() {
+	public byte[] getPicture() {
 		return picture;
 	}
 
-	public void setPicture(Blob picture) {
+	public void setPicture(byte[] picture) {
 		this.picture = picture;
-	}
-
-	@Override
-	public String toString() {
-		return "User{" +
-				"idUser='" + idUser + '\'' +
-				", name='" + name + '\'' +
-				", date='" + date + '\'' +
-				", gender='" + gender + '\'' +
-				", points=" + points +
-				", telephone='" + telephone + '\'' +
-				", password='" + password + '\'' +
-				", email='" + email + '\'' +
-				", profile='" + profile + '\'' +
-				", picture=" + picture +
-				'}';
 	}
 
 	public List<Home> getHomes() {

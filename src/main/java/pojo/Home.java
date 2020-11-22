@@ -28,7 +28,7 @@ public class Home implements Serializable {
     private String adress;
 
     @Column(name = "picture",nullable = true)
-    private Blob picture;
+    private byte[] picture;
 
     @OneToMany(targetEntity = Task.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "idHome")
@@ -41,7 +41,7 @@ public class Home implements Serializable {
     private List<User> users;
 
 
-    public Home(int idHome, String name, String description, int rent, String adress, Blob picture) {
+    public Home(int idHome, String name, String description, int rent, String adress, byte[] picture) {
         this.idHome = idHome;
         this.name = name;
         this.description = description;
@@ -92,11 +92,11 @@ public class Home implements Serializable {
         this.adress = adress;
     }
 
-    public Blob getPicture() {
+    public byte[] getPicture() {
         return picture;
     }
 
-    public void setPicture(Blob picture) {
+    public void setPicture(byte[] picture) {
         this.picture = picture;
     }
 
