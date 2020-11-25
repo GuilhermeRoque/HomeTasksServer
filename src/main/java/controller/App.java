@@ -165,16 +165,4 @@ public class App{
         return Response.ok(homes).build();
     }
 
-    @Authorize
-    @Path("/task")
-    @GET
-    @Produces(MediaType.APPLICATION_JSON + "; charset=UTF-8")
-    public Response getTasksHome(@HeaderParam("Authorization") String bearerToken) {
-        DAO dao = new DAO();
-        String userID = JWT.getSubject(bearerToken);
-        User user = dao.find(User.class, userID);
-        List<Home> homes = user.getHomes();
-        return Response.ok(homes.get(0).getTasks()).build();
-    }
-
 }
