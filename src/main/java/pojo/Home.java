@@ -1,44 +1,44 @@
 package pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
-import java.sql.Blob;
 import java.util.List;
 
-@XmlRootElement
 @Entity
 @Table
 public class Home implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idHome;
+    int idHome;
 
     @Column(name = "name",nullable = false)
-    private String name;
+    String name;
 
     @Column(name = "description",nullable = false)
-    private String description;
+    String description;
 
     @Column(name = "rent",nullable = false)
-    private int rent;
+    int rent;
 
     @Column(name = "adress",nullable = false)
-    private String adress;
+    String adress;
 
     @Column(name = "picture",nullable = true)
-    private byte[] picture;
+    byte[] picture;
 
+    @JsonIgnore
     @OneToMany(targetEntity = Task.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "idHome")
-    private List<Task> tasks;
+    public List<Task> tasks;
 
-    @ManyToMany
+    @JsonIgnore
+    @ManyToMany(targetEntity = User.class, fetch = FetchType.LAZY)
     @JoinTable(name = "User_has_Home",
             joinColumns = @JoinColumn(name = "Home_idHome"),
             inverseJoinColumns = @JoinColumn(name = "User_idUser"))
-    private List<User> users;
+    public List<User> users;
 
 
     public Home(int idHome, String name, String description, int rent, String adress, byte[] picture) {
@@ -115,4 +115,5 @@ public class Home implements Serializable {
     public void setUsers(List<User> users) {
         this.users = users;
     }
+
 }

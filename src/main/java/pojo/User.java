@@ -1,14 +1,13 @@
 package pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.List;
 
-@XmlRootElement
 @Entity
 @Table
-public class User implements Serializable {
+public class User implements Serializable{
 
 	@Id
 	@Column(name="idUser",unique = true)
@@ -38,10 +37,12 @@ public class User implements Serializable {
 	@Column(name="profile",nullable = false)
 	private String profile;
 
+	@JsonIgnore
 	@Column(name="picture")
 	private byte[] picture;
 
-	@ManyToMany(mappedBy = "users")
+	@JsonIgnore
+	@ManyToMany(mappedBy = "users", fetch = FetchType.LAZY)
 	private List<Home> homes;
 	public User(){}
 
@@ -144,6 +145,22 @@ public class User implements Serializable {
 
 	public void setHomes(List<Home> homes) {
 		this.homes = homes;
+	}
+
+	@Override
+	public String toString() {
+		return "User{" +
+				"idUser='" + idUser + '\'' +
+				", name='" + name + '\'' +
+				", date='" + date + '\'' +
+				", gender='" + gender + '\'' +
+				", points=" + points +
+				", telephone='" + telephone + '\'' +
+				", password='" + password + '\'' +
+				", email='" + email + '\'' +
+				", profile='" + profile + '\'' +
+				", homes=" + homes +
+				'}';
 	}
 }
 

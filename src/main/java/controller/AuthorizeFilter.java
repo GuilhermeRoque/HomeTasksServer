@@ -10,7 +10,6 @@ import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
-import static controller.App.secretKey;
 
 
 @Provider
@@ -26,7 +25,7 @@ public class AuthorizeFilter implements ContainerRequestFilter {
         try {
             String token = authorizationHeader.substring("Bearer".length()).trim();
             Jwts.parserBuilder()
-                    .setSigningKey(secretKey)
+                    .setSigningKey(JWT.secretKey)
                     .build()
                     .parseClaimsJws(token);
         } catch (Exception e) {

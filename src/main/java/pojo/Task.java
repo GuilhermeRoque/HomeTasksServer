@@ -1,16 +1,14 @@
 package pojo;
 
 import javax.persistence.*;
-import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement
 @Entity
 @Table
 public class Task {
 
 	@Id
 	@Column(name="idTask",unique = true)
-	private  int idTask;
+	private Integer idTask;
 
 	@Column(name="name",nullable = false)
 	private String name;

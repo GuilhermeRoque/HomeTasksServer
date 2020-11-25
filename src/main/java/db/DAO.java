@@ -1,7 +1,5 @@
 package db;
 
-
-
 import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -11,16 +9,14 @@ import java.util.List;
 public class DAO{
     private final EntityManager entityManager;
     private final EntityTransaction transaction;
-
-    public DAO(){
-
-        this.entityManager = entityManagerFactory.createEntityManager();
-        this.transaction = entityManager.getTransaction();
-        this.transaction.begin();
-    }
-
     private static final EntityManagerFactory entityManagerFactory =
             Persistence.createEntityManagerFactory("HomeTasksServer");
+
+    public DAO(){
+        entityManager = entityManagerFactory.createEntityManager();
+        transaction = entityManager.getTransaction();
+        transaction.begin();
+    }
 
     public static EntityManager getEntityManager() {
         return entityManagerFactory.createEntityManager();
@@ -56,9 +52,4 @@ public class DAO{
         TypedQuery<T> typedQuery = entityManager.createQuery(select);
         return typedQuery.getResultList();
     }
-
-    public void close(){
-        this.entityManager.close();
-    }
-
 }

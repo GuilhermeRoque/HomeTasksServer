@@ -28,6 +28,8 @@ mapped to database tables. Database driver, location, userid and pw
             <property name="javax.persistence.jdbc.user" value="guilherme" />
             <!-- Password -->
             <property name="javax.persistence.jdbc.password" value="56205340" />
+            <!--Loggind-->
+            <property name = "hibernate.show_sql" value = "true" />
         </properties>
     </persistence-unit>
 </persistence>
