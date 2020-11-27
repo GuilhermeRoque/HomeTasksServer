@@ -1,4 +1,4 @@
-package pojo;
+package media;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
@@ -31,14 +31,14 @@ public class Home implements Serializable {
     @JsonIgnore
     @OneToMany(targetEntity = Task.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "idHome")
-    public List<Task> tasks;
+    List<Task> tasks;
 
     @JsonIgnore
     @ManyToMany(targetEntity = User.class, fetch = FetchType.LAZY)
     @JoinTable(name = "User_has_Home",
             joinColumns = @JoinColumn(name = "Home_idHome"),
             inverseJoinColumns = @JoinColumn(name = "User_idUser"))
-    public List<User> users;
+    List<User> users;
 
 
     public Home(int idHome, String name, String description, int rent, String adress, byte[] picture) {
