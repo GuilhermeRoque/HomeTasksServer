@@ -7,7 +7,7 @@ import javax.persistence.*;
 public class Task {
 
 	@Id
-	@Column(name="idTask",unique = true)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer idTask;
 
 	@Column(name="name",nullable = false)

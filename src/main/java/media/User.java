@@ -39,11 +39,11 @@ public class User implements Serializable{
 
 	@JsonIgnore
 	@Column(name="picture")
-	private byte[] picture;
+	byte[] picture;
 
 	@JsonIgnore
-	@ManyToMany(mappedBy = "users", fetch = FetchType.LAZY)
-	private List<Home> homes;
+	@ManyToMany(mappedBy = "users", fetch = FetchType.LAZY, targetEntity = Home.class)
+	List<Home> homes;
 	public User(){}
 
 	public User(String idUser, String name, String date, String gender, int points, String telephone, String password, String email, String profile, byte[] picture) {
