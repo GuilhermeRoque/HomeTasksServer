@@ -3,50 +3,48 @@ package media;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
-@Table
 public class Home implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int idHome;
 
-    @Column(name = "name",nullable = false)
     String name;
-
-    @Column(name = "description",nullable = false)
     String description;
-
-    @Column(name = "rent",nullable = false)
     int rent;
-
-    @Column(name = "adress",nullable = false)
-    String adress;
-
-    @Column(name = "picture",nullable = true)
-    byte[] picture;
+    String address;
 
     @JsonIgnore
-    @OneToMany(targetEntity = Task.class, cascade = CascadeType.ALL)
+    String picture;
+
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "idHome")
-    List<Task> tasks;
+    Set<Task> tasks = new HashSet<>();
+
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
+    }
 
     @JsonIgnore
-    @ManyToMany(targetEntity = User.class, fetch = FetchType.LAZY)
-    @JoinTable(name = "User_has_Home",
-            joinColumns = @JoinColumn(name = "Home_idHome"),
-            inverseJoinColumns = @JoinColumn(name = "User_idUser"))
-    List<User> users;
+    @ManyToMany(mappedBy = "homes", fetch = FetchType.LAZY, targetEntity = User.class)
+    Set<User> users = new HashSet<>();
 
 
-    public Home(int idHome, String name, String description, int rent, String adress, byte[] picture) {
+    public Home(int idHome, String name, String description, int rent, String address, String picture) {
         this.idHome = idHome;
         this.name = name;
         this.description = description;
         this.rent = rent;
-        this.adress = adress;
+        this.address = address;
         this.picture = picture;
     }
 
@@ -84,36 +82,40 @@ public class Home implements Serializable {
         this.rent = rent;
     }
 
-    public String getAdress() {
-        return adress;
+    public String getAddress() {
+        return address;
     }
 
-    public void setAdress(String adress) {
-        this.adress = adress;
+    public void setAddress(String adress) {
+        this.address = adress;
     }
 
-    public byte[] getPicture() {
+    public String getPicture() {
         return picture;
     }
 
-    public void setPicture(byte[] picture) {
+    public void setPicture(String picture) {
         this.picture = picture;
     }
 
-    public List<Task> getTasks() {
+    public Set<Task> getTasks() {
         return tasks;
     }
 
-    public void setTasks(List<Task> tasks) {
+    public void setTasks(Set<Task> tasks) {
         this.tasks = tasks;
     }
 
-    public List<User> getUsers() {
-        return users;
-    }
 
-    public void setUsers(List<User> users) {
-        this.users = users;
+    @Override
+    public String toString() {
+        return "Home{" +
+                "idHome=" + idHome +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", rent=" + rent +
+                ", address='" + address + '\'' +
+                ", picture='" + picture + '\'' +
+                '}';
     }
-
 }

@@ -7,24 +7,40 @@ import javax.persistence.criteria.Root;
 import java.lang.reflect.Field;
 import java.util.List;
 
-public class DAO{
-    private static final EntityManagerFactory entityManagerFactory =
-            Persistence.createEntityManagerFactory("HomeTasksServer");
+public class JPAUtils {
+    public static final EntityManagerFactory entityManagerFactory =
+            Persistence.createEntityManagerFactory("HomeTasksDB");
 
     public static boolean persist(Object obj) {
-        boolean ret = true;
         EntityManager entityManager = entityManagerFactory.createEntityManager();
-        EntityTransaction transaction = entityManager.getTransaction();
-        transaction.begin();
         try {
+            entityManager.getTransaction().begin();
             entityManager.persist(obj);
-            transaction.commit();
+            entityManager.getTransaction().commit();
         }catch (Exception e){
             System.err.println(e.toString());
-            ret = false;
+            return false;
+        }finally {
+            entityManager.close();
         }
-        return ret;
+        return true;
     }
+
+    public static boolean update(Object obj) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try {
+            entityManager.getTransaction().begin();
+            entityManager.merge(obj);
+            entityManager.getTransaction().commit();
+        }catch (Exception e){
+            System.err.println(e.toString());
+            return false;
+        }finally {
+            entityManager.close();
+        }
+        return true;
+    }
+
 
     public static <T> T find(Class<T> entityClass, Object primaryKey) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
@@ -40,7 +56,7 @@ public class DAO{
     }
 
     public static Object find(String stringClass, String primaryKey){
-        Class<?> targetClass = DAO.findTargetClass(stringClass);
+        Class<?> targetClass = JPAUtils.findTargetClass(stringClass);
         if (targetClass != null){
             Field[] declaredFields = targetClass.getDeclaredFields();
             for(Field f :declaredFields){
@@ -48,10 +64,10 @@ public class DAO{
                     Class<?> type = f.getType();
                     /*Primary keys are just Integer or String*/
                     if (type.equals(Integer.class)){
-                        return DAO.find(targetClass,new Integer(primaryKey));
+                        return JPAUtils.find(targetClass,new Integer(primaryKey));
                     }
                     else {
-                        return DAO.find(targetClass,primaryKey);
+                        return JPAUtils.find(targetClass,primaryKey);
                     }
                 }
             }
@@ -70,7 +86,7 @@ public class DAO{
 
 
     public static Object findFieldEntities(Object entity, String stringClass){
-        Class<?> targetClass = DAO.findTargetClass(stringClass);
+        Class<?> targetClass = JPAUtils.findTargetClass(stringClass);
         if (targetClass !=null){
             Field[] declaredFields = entity.getClass().getDeclaredFields();
             for(Field f :declaredFields){
@@ -93,28 +109,6 @@ public class DAO{
         return null;
     }
 
-    public static Object findFieldEntities(Object entity, Class<?> targetClass){
-        if (targetClass !=null){
-            Field[] declaredFields = entity.getClass().getDeclaredFields();
-            for(Field f :declaredFields){
-                OneToMany oneToMany = f.getAnnotation(OneToMany.class);
-                ManyToMany manyToMany = f.getAnnotation(ManyToMany.class);
-                if(oneToMany != null){
-                    Class<?> fieldClass = oneToMany.targetEntity();
-                    if (targetClass.equals(fieldClass)){
-                        return getField(f,entity);
-                    }
-                }
-                else if(manyToMany != null){
-                    Class<?> fieldClass = manyToMany.targetEntity();
-                    if (targetClass.equals(fieldClass)){
-                        return getField(f,entity);
-                    }
-                }
-            }
-        }
-        return null;
-    }
 
     public static Object getEntityFieldValue(Object entity, String fieldName){
         if (entity != null) {
@@ -141,7 +135,7 @@ public class DAO{
 
     public static Class<?> findTargetClass(String targetClassName){
         try {
-            return Class.forName(DAO.class.getPackage().getName() + "." + targetClassName);
+            return Class.forName(JPAUtils.class.getPackage().getName() + "." + targetClassName);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
             return null;

@@ -1,4 +1,4 @@
-package controller;
+package authentication;
 
 import javax.ws.rs.NameBinding;
 import java.lang.annotation.ElementType;
@@ -9,4 +9,4 @@ import java.lang.annotation.Target;
 @NameBinding
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE,ElementType.METHOD})
-@interface Authorize { }
+public @interface Authorize { }

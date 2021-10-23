@@ -3,59 +3,55 @@ package media;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
-@Table
 public class User implements Serializable{
 
 	@Id
-	@Column(name="idUser",unique = true)
+	@Column(unique = true)
+
 	private String idUser;
-
-	@Column(name="name",nullable = false)
 	private String name;
-
-	@Column(name="date",nullable = false)
-	private String date;
-
-	@Column(name="gender",nullable = false)
-	private String gender;
-
-	@Column(name="points",nullable = false)
-	private int points;
-
-	@Column(name="telephone",nullable = false)
+	private LocalDate date;
 	private String telephone;
-
-	@Column(name="password",nullable = false)
 	private String password;
-
-	@Column(name="email",nullable = false)
 	private String email;
-
-	@Column(name="profile",nullable = false)
-	private String profile;
+	@Enumerated(EnumType.STRING)
+	private UserCategory category;
+	@JsonIgnore
+	private String picture;
 
 	@JsonIgnore
-	@Column(name="picture")
-	byte[] picture;
+	@ManyToMany(fetch = FetchType.LAZY, targetEntity = Home.class)
+	@JoinTable(name = "User_has_Home",
+			joinColumns = @JoinColumn(name = "User_idUser"),
+			inverseJoinColumns = @JoinColumn(name = "Home_idHome"))
+	Set<Home> homes = new HashSet<>();
 
-	@JsonIgnore
-	@ManyToMany(mappedBy = "users", fetch = FetchType.LAZY, targetEntity = Home.class)
-	List<Home> homes;
+
 	public User(){}
 
-	public User(String idUser, String name, String date, String gender, int points, String telephone, String password, String email, String profile, byte[] picture) {
+	public Set<Home> getHomes() {
+		return homes;
+	}
+
+	public void setHomes(Set<Home> homes) {
+		this.homes = homes;
+	}
+
+	public User(String idUser, String name, LocalDate date, String telephone, String password, String email, UserCategory category, String picture) {
 		this.idUser = idUser;
 		this.name = name;
 		this.date = date;
-		this.gender = gender;
-		this.points = points;
 		this.telephone = telephone;
 		this.password = password;
 		this.email = email;
-		this.profile = profile;
+		this.category = category;
 		this.picture = picture;
 	}
 
@@ -75,28 +71,12 @@ public class User implements Serializable{
 		this.name = name;
 	}
 
-	public String getDate() {
+	public LocalDate getDate() {
 		return date;
 	}
 
-	public void setDate(String date) {
+	public void setDate(LocalDate date) {
 		this.date = date;
-	}
-
-	public String getGender() {
-		return gender;
-	}
-
-	public void setGender(String gender) {
-		this.gender = gender;
-	}
-
-	public int getPoints() {
-		return points;
-	}
-
-	public void setPoints(int points) {
-		this.points = points;
 	}
 
 	public String getTelephone() {
@@ -123,29 +103,23 @@ public class User implements Serializable{
 		this.email = email;
 	}
 
-	public String getProfile() {
-		return profile;
+	public UserCategory getCategory() {
+		return category;
 	}
 
-	public void setProfile(String profile) {
-		this.profile = profile;
+	public void setCategory(UserCategory profile) {
+		this.category = profile;
 	}
 
-	public byte[] getPicture() {
+	public String getPicture() {
 		return picture;
 	}
 
-	public void setPicture(byte[] picture) {
+	public void setPicture(String picture) {
 		this.picture = picture;
 	}
 
-	public List<Home> getHomes() {
-		return homes;
-	}
 
-	public void setHomes(List<Home> homes) {
-		this.homes = homes;
-	}
 
 	@Override
 	public String toString() {
@@ -153,13 +127,10 @@ public class User implements Serializable{
 				"idUser='" + idUser + '\'' +
 				", name='" + name + '\'' +
 				", date='" + date + '\'' +
-				", gender='" + gender + '\'' +
-				", points=" + points +
 				", telephone='" + telephone + '\'' +
 				", password='" + password + '\'' +
 				", email='" + email + '\'' +
-				", profile='" + profile + '\'' +
-				", homes=" + homes +
+				", category='" + category + '\'' +
 				'}';
 	}
 }

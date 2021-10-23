@@ -1,4 +1,4 @@
-package controller;
+package authentication;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -9,7 +9,7 @@ import java.util.Date;
 public class JWT {
     final static Key secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
-    protected static String buildToken(String subject){
+    public static String buildToken(String subject){
         return Jwts.builder()
                 .setIssuer("localhost:8080")
                 .setSubject(subject)
@@ -19,7 +19,7 @@ public class JWT {
 
     }
 
-    protected static String getSubject(String bearerToken){
+    public static String getSubject(String bearerToken){
         String token = bearerToken.substring("Bearer".length()).trim();
         return Jwts.parserBuilder()
                 .setSigningKey(secretKey)

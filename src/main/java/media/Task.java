@@ -1,43 +1,27 @@
 package media;
 
-import javax.persistence.*;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @Entity
-@Table
 public class Task {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer idTask;
 
-	@Column(name="name",nullable = false)
 	private String name;
-
-	@Column(name="description",nullable = false)
 	private String description;
-
-	@Column(name="state",nullable = false)
 	private String state;
-
-	@Column(name="date",nullable = false)
 	private String date;
-
-	@Column(name="value",nullable = false)
 	private float value;
-
-	@Column(name="alternate",nullable = false)
 	private boolean alternate;
-
-	@Column(name="renew",nullable = false)
 	private boolean renew;
-
-	@Column(name="idOwner",nullable = false)
 	private String idOwner;
-
-	@Column(name="idReporter",nullable = false)
 	private String idReporter;
-
-	@Column(name="idHome",nullable = false)
 	private int idHome;
 
 	public Task(){}

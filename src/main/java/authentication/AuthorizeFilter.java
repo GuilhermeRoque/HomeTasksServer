@@ -1,4 +1,4 @@
-package controller;
+package authentication;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.IOException;
