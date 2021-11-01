@@ -25,9 +25,9 @@ mapped to database tables. Database driver, location, userid and pw
             <!-- URL for DB -->
             <property name="javax.persistence.jdbc.url" value="jdbc:mysql://127.0.0.1:3306/HomeTasksDB?useSSL=false" />
             <!-- Username -->
-            <property name="javax.persistence.jdbc.user" value="inet" />
+            <property name="javax.persistence.jdbc.user" value="user" />
             <!-- Password -->
-            <property name="javax.persistence.jdbc.password" value="Lock1net" />
+            <property name="javax.persistence.jdbc.password" value="pass" />
 
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL57Dialect"/>
 
