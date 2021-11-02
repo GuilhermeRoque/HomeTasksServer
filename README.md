@@ -9,15 +9,10 @@ Documentação disponível em [HomeTasks - Docs](https://github.com/best-softwar
 ### Pré-requisitos
 
 * IntelliJ IDEA (com Gradle)
-* MySQL Server com banco de dados do projeto HomeTasks
+* Schema HomeTasksDB criado no MySQL
 
 ### Importando projeto no IntelliJ
 
-1. Caso já tenha usado algum projeto com Gradle anteriormente, recomendasse limpar o diretório `.gradle ` do seu home.
-
-   ```bash
-   $ sudo rm -r ~/.gradle
-   ```
 
 1. Faça o download do repositório Server para o diretório de sua preferência.
 
@@ -35,14 +30,9 @@ Documentação disponível em [HomeTasks - Docs](https://github.com/best-softwar
 
 ### Configurando Banco de Dados
 
-> Ainda não inserido arquivo de configuração banco de dados. Deve-se alterar no código.
+> Carregar as variáveis do arquivo .env no ambiente. (alterando se for necessário)
 
-1. Edite o arquivo `config.properties`
+### TODO
 
-```properties
-host.mysql=127.0.0.1 
-port.mysql=3306
-dbname=name_database
-user.mysql=####
-password.mysql=####
-```
+1. Adicionar métodos PUT. Nesse caso deve-se lembrar que quando a intenção não é atualizar todo o objeto então o PUT deve ser em uma URI única específica. Ex: "PUT /apiHomeTasks/User/Roque/name novoNome" para alterar o nome.
+2. Adicionar serviço de geração de token para novos usuários.
