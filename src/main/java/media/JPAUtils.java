@@ -21,7 +21,7 @@ public class JPAUtils {
         properties.put(JPA_JDBC_PASSWORD,env.get("DB_PASSWORD"));
         properties.put(JPA_JDBC_URL,env.get("DB_URL"));
         properties.put(DIALECT,env.get("HIBERNATE_DIALECT"));
-        properties.put(HBM2DDL_AUTO,env.get("HIBERNATE_DIALECT_HBM2DDL_AUTO"));
+        properties.put(HBM2DDL_AUTO,env.get("HIBERNATE_HBM2DDL_AUTO"));
         entityManagerFactory =
                 Persistence.createEntityManagerFactory("HomeTasksDB",properties);
     }
