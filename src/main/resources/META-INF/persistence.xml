@@ -19,25 +19,13 @@ mapped to database tables. Database driver, location, userid and pw
         <class>media.User</class>
         <class>media.Task</class>
         <class>media.Home</class>
-        <properties>
-            <!-- Driver for DB database -->
-            <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
-            <!-- URL for DB -->
-            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://127.0.0.1:3306/HomeTasksDB?useSSL=false" />
-            <!-- Username -->
-            <property name="javax.persistence.jdbc.user" value="user" />
-            <!-- Password -->
-            <property name="javax.persistence.jdbc.password" value="pass" />
-
-            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL57Dialect"/>
-
-            <!--            update tables (it does not creates the database)-->
-            <property name="hibernate.hbm2ddl.auto" value="update"/>
-
+<!--        <properties>-->
+<!--            &lt;!&ndash;            update tables (it does not creates the database)&ndash;&gt;-->
+<!--            <property name="hibernate.hbm2ddl.auto" value="update"/>-->
             <!--Logging-->
 <!--            <property name = "hibernate.show_sql" value = "true" />-->
 <!--            <property name="hibernate.format_sql" value="true"/>-->
 
-        </properties>
+<!--        </properties>-->
     </persistence-unit>
 </persistence>

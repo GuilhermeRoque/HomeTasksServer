@@ -5,11 +5,26 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static org.hibernate.cfg.AvailableSettings.*;
 
 public class JPAUtils {
-    public static final EntityManagerFactory entityManagerFactory =
-            Persistence.createEntityManagerFactory("HomeTasksDB");
+    public static final EntityManagerFactory entityManagerFactory;
+    static {
+        Map<String, String> env = System.getenv();
+        Map<String,String> properties = new HashMap<>();
+        properties.put(JPA_JDBC_DRIVER,env.get("DB_DRIVER"));
+        properties.put(JPA_JDBC_USER,env.get("DB_USERNAME"));
+        properties.put(JPA_JDBC_PASSWORD,env.get("DB_PASSWORD"));
+        properties.put(JPA_JDBC_URL,env.get("DB_URL"));
+        properties.put(DIALECT,env.get("HIBERNATE_DIALECT"));
+        properties.put(HBM2DDL_AUTO,env.get("HIBERNATE_DIALECT_HBM2DDL_AUTO"));
+        entityManagerFactory =
+                Persistence.createEntityManagerFactory("HomeTasksDB",properties);
+    }
 
     public static boolean persist(Object obj) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
